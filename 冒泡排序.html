@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<title></title>
+		<script>
+			function mao(arr){
+				for(i=0;i<arr.length-1;i++){
+					for(j=i+1;j<arr.length;j++){
+						if(arr[i]>arr[j]){
+							var result=arr[i];
+							arr[i]=arr[j];
+							arr[j]=result;
+						}
+					}
+				}
+				return arr;
+			}
+		arr=[-1,-5,56,84,-58,454]
+		console.log(mao(arr))
+		</script>
+	</head>
+	<body>
+	</body>
+</html>
