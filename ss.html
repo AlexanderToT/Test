@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<title></title>
+	</head>
+	<body>
+		<input value="出来吧" type="button" id="btn" />
+		<ul id="box">
+			
+		</ul>
+	</body>
+	<script>
+		
+		function ajax(options){
+			var defaults={
+				method:options.method||"get",
+				url:options.url,
+				data:options.data||"",
+				successFn:options.successFn||null,
+				dataType: options.dataType || ""
+			}
+			defaults.method=options.method.toLowerCase();
+			
+			 if( defaults.url === "" ){
+		            alert( "url不能为空" );
+		            return;
+		          }
+			 
+			var xhr=null;
+			try{
+				xhr=new XMLHttpRequest();
+			}catch(e){
+				xhr=new ActiveXObject("Microsoft.XMLHTTP");
+			}
+			if(defaults.method=='get'&&defaults.data){
+				defaults.url +='?'+defaults.data;
+			}
+			xhr.open(defaults.method,defaults.url,true);
+			if(defaults.method=='get'){
+				xhr.send();
+			}else{
+				xhr.setRequestHeader('content-type','application/x-www-form-urlencoded')
+				xhr.send(defaults.data);
+			}
+			xhr.onreadystatechange=function(){
+				if(xhr.readyState==4){
+					if(xhr.status==200){
+						var data=xhr.responseText;
+						 if( defaults.dataType.toLowerCase() === "json" ){
+		                    data = JSON.parse( data );
+		                }
+		
+		                if( defaults.dataType.toLowerCase() === "xml" ){
+		                   data = xhr.responseXML;
+		                }
+		                
+						 if( typeof defaults.successFn === "function" ){
+		                  defaults.successFn(data);
+		                }
+					}else{
+						alert('出错了,Err:'+xhr.status);
+					}
+				}
+			}
+		}
+		
+		var btn=document.getElementById("btn")
+		var box=document.getElementById("box")
+		var timer=null;
+		btn.onclick=function(){
+			clearInterval(timer)
+			fn()
+			function fn(){
+				ajax({
+					method:"get",
+					url:"2.get.php",
+					successFn:function(data){
+					data=JSON.parse(data);
+					var str="";
+					for(var i=0;i<data.length;i++){
+						str+="<li><a href='#'>"+data[i].title+"</a></span>"+data[i].date+"</span></li>"
+					}
+					box.innerHTML=str;
+				    }
+					})
+			}
+			
+			timer=setInterval(function(){
+				fn();
+			},3000)
+		}
+	</script>
+</html>
